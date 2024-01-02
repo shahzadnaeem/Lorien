@@ -23,33 +23,35 @@ func _init():
 
 # -------------------------------------------------------------------------------------------------
 func tool_event(event: InputEvent) -> void:
-	_cursor.set_pressure(1.0)
+	#_cursor.set_pressure(1.0)
 	
 	var should_draw_circle := Input.is_key_pressed(KEY_SHIFT)
+	var hold_pressure := Input.is_key_pressed(KEY_CONTROL)
 	
 	if event is InputEventMouseMotion:
 		if performing_stroke:
-			_cursor.set_pressure(event.pressure)
+			if event.pressure > 0.0:
+				if !hold_pressure:
+					_cursor.set_pressure(event.pressure)
 			remove_all_stroke_points()
-			_make_ellipse(PRESSURE, STEP_IN_MOTION, should_draw_circle)
-		
-	# Start + End
+			_make_ellipse(_cursor.get_pressure(), STEP_IN_MOTION, should_draw_circle)
 	elif event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT:
 			if event.pressed:
 				start_stroke()
 				_start_position_top_left = _cursor.global_position
 				remove_all_stroke_points()
-				_make_ellipse(PRESSURE, STEP_IN_MOTION, should_draw_circle)
+				_make_ellipse(_cursor.get_pressure(), STEP_IN_MOTION, should_draw_circle)
 			elif !event.pressed && performing_stroke:
 				remove_all_stroke_points()
-				_make_ellipse(PRESSURE, STEP_STATIC, should_draw_circle)
+				_make_ellipse(_cursor.get_pressure(), STEP_STATIC, should_draw_circle)
 				end_stroke()
+				_cursor.reset_pressure()
 
 # -------------------------------------------------------------------------------------------------
 func _make_ellipse(pressure: float, step: int, should_draw_circle: bool) -> void:
 	
-	pressure = pressure_curve.interpolate(pressure)
+	#pressure = pressure_curve.interpolate(pressure)
 
 	var r1 := 0.5 * abs(_cursor.global_position.x - _start_position_top_left.x)
 	var r2 := 0.5 * abs(_cursor.global_position.y - _start_position_top_left.y)

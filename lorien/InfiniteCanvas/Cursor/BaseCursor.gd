@@ -22,7 +22,13 @@ func _update_position():
 
 # -------------------------------------------------------------------------------------------------
 func set_pressure(pressure: float) -> void:
-	pass
+	_pressure = pressure
+
+func get_pressure() -> float:
+	return _pressure
+
+func reset_pressure() -> void:
+	_pressure = 0.0
 
 # -------------------------------------------------------------------------------------------------
 func change_size(value: int) -> void:

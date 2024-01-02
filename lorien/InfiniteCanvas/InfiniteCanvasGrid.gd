@@ -46,7 +46,7 @@ func set_canvas_color(c: Color) -> void:
 
 # -------------------------------------------------------------------------------------------------
 func set_grid_scale(size: float):
-	_grid_size *= size
+	_grid_size = Config.DEFAULT_GRID_SIZE * size
 	update()
 
 # -------------------------------------------------------------------------------------------------
