@@ -121,6 +121,8 @@ func _process(delta):
 	_statusbar.set_camera_position(_canvas.get_camera_offset())
 	_statusbar.set_camera_zoom(_canvas.get_camera_zoom())
 	_statusbar.set_fps(Engine.get_frames_per_second())
+
+	_statusbar.set_cursor_position(_canvas._active_tool._cursor.global_position)
 	
 	# Update tab title
 	var active_project: Project = ProjectManager.get_active_project()

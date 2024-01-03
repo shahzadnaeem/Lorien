@@ -68,6 +68,7 @@ func _draw() -> void:
 				for y in range(y_start, y_end):
 					var pos := Vector2(x, y) * grid_size
 					draw_rect(Rect2(pos.x, pos.y, dot_size, dot_size), _grid_color)
+
 		Types.GridPattern.LINES:
 			# Vertical lines
 			var start_index := int(offset.x / grid_size) - 1

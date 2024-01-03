@@ -8,8 +8,10 @@ onready var _pressure_label: Label = $MarginContainer/HBoxContainer/Left/Pressur
 onready var _position_label: Label = $MarginContainer/HBoxContainer/Left/PositionLabel
 onready var _zoom_label: Label = $MarginContainer/HBoxContainer/Left/ZoomLabel
 onready var _fps_label: Label = $MarginContainer/HBoxContainer/Left/FpsLabel
+onready var _cursor_label = $MarginContainer/HBoxContainer/Left/CursorLabel
 
 var _str_position: String
+var _str_cursor: String
 var _str_zoom: String
 var _str_pressure: String
 var _str_fps: String
@@ -24,6 +26,7 @@ func _ready() -> void:
 # -------------------------------------------------------------------------------------------------
 func _apply_language() -> void:
 	_str_position = tr("STATUSBAR_POSITION")
+	_str_cursor = tr("STATUSBAR_CURSOR")
 	_str_zoom = tr("STATUSBAR_ZOOM")
 	_str_pressure = tr("STATUSBAR_PRESSURE")
 	_str_fps = tr("STATUSBAR_FPS")
@@ -33,6 +36,10 @@ func _apply_language() -> void:
 # -------------------------------------------------------------------------------------------------
 func set_camera_position(pos: Vector2) -> void:
 	_position_label.text = "%s: %d, %d" % [_str_position, pos.x, pos.y]
+
+# -------------------------------------------------------------------------------------------------
+func set_cursor_position(pos: Vector2) -> void:
+	_cursor_label.text = "%s: %d, %d" % [_str_cursor, pos.x, pos.y]
 
 # -------------------------------------------------------------------------------------------------
 func set_camera_zoom(zoom: float) -> void:

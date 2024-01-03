@@ -101,6 +101,19 @@ func add_point(point: Vector2, pressure: float) -> void:
 	points.append(point)
 	pressures.append(converted_pressure)
 
+# -------------------------------------------------------------------------------------------------
+func set_pressures(pressure:float) -> void:
+	var new_pressures : Array
+	var i: int = 0
+	
+	for p in pressures:
+		new_pressures.append(pressure)
+		i += 1
+
+	pressures = new_pressures
+	
+	print( "points in stroke: %d" % i)
+
 # ------------------------------------------------------------------------------------------------
 func remove_last_point() -> void:
 	if !points.empty():

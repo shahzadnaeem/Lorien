@@ -55,6 +55,9 @@ func start_stroke() -> void:
 func add_stroke_point(point: Vector2, pressure: float = 1.0) -> void:
 	_canvas.add_stroke_point(point, pressure)
 
+func set_stroke_pressures(pressure: float) -> void:
+	_canvas.set_stroke_pressures(pressure)
+
 # -------------------------------------------------------------------------------------------------
 func remove_last_stroke_point() -> void:
 	_canvas.remove_last_stroke_point()

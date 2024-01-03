@@ -14,16 +14,18 @@ onready var _eraser_tool: EraserTool = $EraserTool
 onready var _selection_tool: SelectionTool = $SelectionTool
 onready var _active_tool: CanvasTool = _brush_tool
 onready var _active_tool_type: int = Types.Tool.BRUSH
+
+onready var _grid: InfiniteCanvasGrid = $Viewport/Grid
 onready var _strokes_parent: Node2D = $Viewport/Strokes
+
 onready var _camera: Camera2D = $Viewport/Camera2D
 onready var _viewport: Viewport = $Viewport
-onready var _grid: InfiniteCanvasGrid = $Viewport/Grid
 
 var info := Types.CanvasInfo.new()
 var _is_enabled := false
 var _background_color: Color
 var _brush_color := Config.DEFAULT_BRUSH_COLOR
-var _brush_size := Config.DEFAULT_BRUSH_SIZE setget set_brush_size
+var _brush_size := Config.DEFAULT_BRUSH_SIZE setget set_brush_size, get_brush_size
 var _current_stroke: BrushStroke
 var _current_project: Project
 var _use_optimizer := true
@@ -50,6 +52,7 @@ func _ready():
 	
 	_camera.connect("zoom_changed", self, "_on_zoom_changed")
 	_camera.connect("position_changed", self, "_on_camera_moved")
+
 	_viewport.size = OS.window_size
 
 	info.pen_inverted = false
@@ -87,7 +90,7 @@ func _process_event(event: InputEvent) -> void:
 	
 	if ! get_tree().is_input_handled():
 		_camera.tool_event(event)
-	if ! get_tree().is_input_handled():
+		
 		if _active_tool.enabled:
 			_active_tool.tool_event(event)
 
@@ -216,6 +219,9 @@ func add_stroke_point(point: Vector2, pressure: float = 1.0) -> void:
 		_optimizer.optimize(_current_stroke)
 	_current_stroke.refresh()
 
+func set_stroke_pressures(pressure: float) -> void:
+	_current_stroke.set_pressures(pressure)
+	
 # -------------------------------------------------------------------------------------------------
 func remove_last_stroke_point() -> void:
 	_current_stroke.remove_last_point()
@@ -311,6 +317,8 @@ func set_brush_size(size: int) -> void:
 	if _active_tool != null:
 		_active_tool._on_brush_size_changed(_brush_size)
 
+func get_brush_size() -> int:
+	return _brush_size
 # -------------------------------------------------------------------------------------------------
 func set_brush_color(color: Color) -> void:
 	_brush_color = color

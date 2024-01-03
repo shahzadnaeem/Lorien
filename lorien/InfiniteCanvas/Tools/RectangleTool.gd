@@ -38,27 +38,31 @@ func tool_event(event: InputEvent) -> void:
 
 # -------------------------------------------------------------------------------------------------
 func _make_rectangle(pressure: float, should_draw_square:bool) -> void:
-	#pressure = pressure_curve.interpolate(pressure)
-	
 	var bottom_right_point := _cursor.global_position
 
 	var height := bottom_right_point.y - _start_position_top_left.y
 	var width  := bottom_right_point.x - _start_position_top_left.x
 	
+	var hs = sign(height)
+	var ws = sign(width)
+	
 	if should_draw_square:
-		height = max(height, width)
-		width = height
+		height = max(abs(height), abs(width))
+		width = height*ws
+		height = height*hs
+		
 		bottom_right_point.y = _start_position_top_left.y + height
 		bottom_right_point.x = _start_position_top_left.x + width
 	
 	var top_right_point   := _start_position_top_left + Vector2(width, 0)
 	var bottom_left_point := _start_position_top_left + Vector2(0, height)
 	
-	var w_offset := width*0.02
-	var h_offset := height*0.02
+	var w_offset := Vector2(width*0.02, 0)
+	var h_offset := Vector2(0,height*0.02)
 	
-	add_subdivided_line(_start_position_top_left, top_right_point - Vector2(w_offset, 0), pressure)
-	add_subdivided_line(top_right_point, bottom_right_point - Vector2(0, h_offset), pressure)
-	add_subdivided_line(bottom_right_point, bottom_left_point + Vector2(w_offset, 0), pressure)
-	add_subdivided_line(bottom_left_point, _start_position_top_left + Vector2(0, h_offset), pressure)
-	add_subdivided_line(_start_position_top_left, _start_position_top_left + Vector2(w_offset, 0), pressure)
+	add_subdivided_line(_start_position_top_left, top_right_point - w_offset, pressure)
+	add_subdivided_line(top_right_point, bottom_right_point - h_offset, pressure)
+	add_subdivided_line(bottom_right_point, bottom_left_point + w_offset, pressure)
+	add_subdivided_line(bottom_left_point, _start_position_top_left + h_offset, pressure)
+	# TODO: Need this gap filler - not correct soln
+	add_subdivided_line(_start_position_top_left, _start_position_top_left + h_offset, pressure)
