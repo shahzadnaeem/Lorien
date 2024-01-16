@@ -2,7 +2,7 @@ class_name CanvasTool, "res://Assets/Icons/tools.png"
 extends Node
 
 # -------------------------------------------------------------------------------------------------
-const SUBDIVISION_PERCENT := 0.16
+const SUBDIVISION_PERCENT := 0.2
 const SUBDIVISION_THRESHHOLD := 50.0 # min length in pixels for when subdivision is required 
 
 # -------------------------------------------------------------------------------------------------
@@ -55,28 +55,29 @@ func start_stroke() -> void:
 func add_stroke_point(point: Vector2, pressure: float = 1.0) -> void:
 	_canvas.add_stroke_point(point, pressure)
 
-func set_stroke_pressures(pressure: float) -> void:
-	_canvas.set_stroke_pressures(pressure)
-
 # -------------------------------------------------------------------------------------------------
 func remove_last_stroke_point() -> void:
 	_canvas.remove_last_stroke_point()
 
 # -------------------------------------------------------------------------------------------------
+
 func add_subdivided_line(from: Vector2, to: Vector2, pressure: float) -> void:
 	var dist := from.distance_to(to)
 	var dir := from.direction_to(to).normalized()
+
 	var do_subdiv := dist > SUBDIVISION_THRESHHOLD
+	
+	do_subdiv = false
+
 	if do_subdiv:
 		var subdiv_length := dist * SUBDIVISION_PERCENT
 		var subdiv_count := int(dist / subdiv_length)
 		for i in subdiv_count:
 			var point: Vector2 = from + dir*subdiv_length*i
 			add_stroke_point(point, pressure)
-		
-	if !do_subdiv:
+	else:
 		add_stroke_point(from, pressure)
-	add_stroke_point(to, pressure)
+		add_stroke_point(to, pressure)
 
 # -------------------------------------------------------------------------------------------------
 func remove_all_stroke_points() -> void:

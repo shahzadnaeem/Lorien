@@ -69,6 +69,7 @@ func _ready():
 	
 	_settings_dialog.connect("ui_scale_changed", self, "_on_scale_changed")
 	_settings_dialog.connect("grid_size_changed", self, "_on_grid_size_changed")
+	_settings_dialog.connect("grid_angle_changed", self, "_on_grid_angle_changed")
 	_settings_dialog.connect("grid_pattern_changed", self, "_on_grid_pattern_changed")
 	_settings_dialog.connect("canvas_color_changed", self, "_on_canvas_color_changed")
 	
@@ -94,14 +95,15 @@ func _notification(what):
 				_exit_dialog.call_deferred("popup")
 			else:
 				_save_state()
-				 # we have to wait a bit before exiting; otherwise the changes might not be persisted correctly.
-				yield(get_tree().create_timer(0.12), "timeout")
-				get_tree().quit()
+				
+				# we have to wait a bit before exiting; otherwise the changes might not be persisted correctly.
+				#yield(get_tree().create_timer(0.12), "timeout")
+				get_tree().call_deferred("quit")
 
 	elif NOTIFICATION_WM_FOCUS_IN == what:
 		Engine.target_fps = Settings.get_value(Settings.RENDERING_FOREGROUND_FPS, Config.DEFAULT_FOREGROUND_FPS)
 		if !_is_mouse_on_ui() && _canvas != null && !is_dialog_open():
-			yield(get_tree().create_timer(0.12), "timeout")
+			#yield(get_tree().create_timer(0.12), "timeout")
 			_canvas.enable()
 	elif NOTIFICATION_WM_FOCUS_OUT == what:
 		Engine.target_fps = Settings.get_value(Settings.RENDERING_BACKGROUND_FPS, Config.DEFAULT_BACKGROUND_FPS)
@@ -122,7 +124,7 @@ func _process(delta):
 	_statusbar.set_camera_zoom(_canvas.get_camera_zoom())
 	_statusbar.set_fps(Engine.get_frames_per_second())
 
-	_statusbar.set_cursor_position(_canvas._active_tool._cursor.global_position)
+	_statusbar.set_cursor_position(_canvas._active_tool._cursor.global_position, _canvas.get_camera_offset())
 	
 	# Update tab title
 	var active_project: Project = ProjectManager.get_active_project()
@@ -188,6 +190,8 @@ func _save_state() -> void:
 	# Window related stuff
 	StatePersistence.set_value(StatePersistence.WINDOW_SIZE, OS.window_size)
 	StatePersistence.set_value(StatePersistence.WINDOW_MAXIMIZED, OS.window_maximized)
+	
+	print("State saved!")
 
 # -------------------------------------------------------------------------------------------------
 func _apply_state() -> void:
@@ -250,6 +254,9 @@ func _is_mouse_on_ui() -> bool:
 	on_ui = on_ui || Utils.is_mouse_in_control(_new_palette_dialog)
 	on_ui = on_ui || Utils.is_mouse_in_control(_edit_palette_dialog)
 	on_ui = on_ui || Utils.is_mouse_in_control(_delete_palette_dialog)
+	on_ui = on_ui || Utils.is_mouse_in_control(_exit_dialog)
+	on_ui = on_ui || Utils.is_mouse_in_control(_unsaved_changes_dialog)
+	on_ui = on_ui || Utils.is_mouse_in_control(_export_dialog)
 	return on_ui
 
 # -------------------------------------------------------------------------------------------------
@@ -257,6 +264,8 @@ func is_dialog_open() -> bool:
 	var open := _file_dialog.visible || _about_dialog.visible
 	open = open || (_settings_dialog.visible || _generic_alert_dialog.visible)
 	open = open || (_new_palette_dialog.visible || _edit_palette_dialog.visible || _delete_palette_dialog.visible)
+	open = open || (_exit_dialog.visible || _unsaved_changes_dialog.visible || _export_dialog.visible)
+
 	return open
 
 # -------------------------------------------------------------------------------------------------
@@ -333,13 +342,17 @@ func _on_grid_size_changed(size: int) -> void:
 	_canvas_grid.set_grid_size(size)
 
 # -------------------------------------------------------------------------------------------------
+func _on_grid_angle_changed(angle: float) -> void:
+	_canvas_grid.set_grid_angle(angle)
+
+# -------------------------------------------------------------------------------------------------
 func _on_grid_pattern_changed(pattern: int) -> void:
 	_canvas_grid.set_grid_pattern(pattern)
 
 # -------------------------------------------------------------------------------------------------
 func _on_canvas_color_changed(color: Color) -> void:
 	_canvas.set_background_color(color)
-	_canvas_grid.set_canvas_color(color)
+	##xSN NOT NEEED done in line above x## _canvas_grid.set_canvas_color(color)
 
 # -------------------------------------------------------------------------------------------------
 func _on_clear_canvas() -> void:

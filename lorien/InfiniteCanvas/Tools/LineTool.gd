@@ -5,16 +5,12 @@ extends CanvasTool
 const SNAP_STEP := deg2rad(15.0)
 
 # -------------------------------------------------------------------------------------------------
-#export var pressure_curve: Curve
-
 var _snapping_enabled := false
 var _head: Vector2
 var _tail: Vector2
 
 # -------------------------------------------------------------------------------------------------
 func tool_event(event: InputEvent) -> void:
-#	_cursor.set_pressure(1.0)
-
 	var hold_pressure := Input.is_key_pressed(KEY_CONTROL)
 	
 	# Snap modifier
@@ -31,7 +27,8 @@ func tool_event(event: InputEvent) -> void:
 			_tail = _get_position(_snapping_enabled)
 
 			remove_all_stroke_points()
-			add_subdivided_line(_head, _tail, _cursor.get_pressure()) #pressure_curve.interpolate(0.5))
+			add_stroke_point(_head, _cursor.get_pressure())
+			add_stroke_point(_tail, _cursor.get_pressure())
 	
 	# Start + End
 	elif event is InputEventMouseButton:
@@ -42,7 +39,8 @@ func tool_event(event: InputEvent) -> void:
 				_tail = _head
 			elif !event.pressed && performing_stroke:
 				remove_all_stroke_points()
-				add_subdivided_line(_head, _tail, _cursor.get_pressure()) #pressure_curve.interpolate(0.5))
+				add_stroke_point(_head, _cursor.get_pressure())
+				add_stroke_point(_tail, _cursor.get_pressure())
 				_cursor.reset_pressure()
 				end_stroke()
 

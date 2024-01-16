@@ -38,8 +38,8 @@ func set_camera_position(pos: Vector2) -> void:
 	_position_label.text = "%s: %d, %d" % [_str_position, pos.x, pos.y]
 
 # -------------------------------------------------------------------------------------------------
-func set_cursor_position(pos: Vector2) -> void:
-	_cursor_label.text = "%s: %d, %d" % [_str_cursor, pos.x, pos.y]
+func set_cursor_position(pos: Vector2, cam: Vector2) -> void:
+	_cursor_label.text = "%s: %d, %d [%d, %d]" % [_str_cursor, pos.x, pos.y, pos.x-cam.x, pos.y-cam.y]
 
 # -------------------------------------------------------------------------------------------------
 func set_camera_zoom(zoom: float) -> void:

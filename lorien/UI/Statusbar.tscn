@@ -4,7 +4,6 @@
 [ext_resource path="res://UI/Statusbar.gd" type="Script" id=2]
 [ext_resource path="res://Assets/Fonts/font_small.tres" type="DynamicFont" id=3]
 
-
 [node name="Statusbar" type="Panel"]
 anchor_right = 1.0
 margin_bottom = 24.0
@@ -58,10 +57,33 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ZoomLabel" type="Label" parent="MarginContainer/HBoxContainer/Left"]
+[node name="CursorLabel" type="Label" parent="MarginContainer/HBoxContainer/Left"]
 margin_left = 66.0
 margin_top = 5.0
-margin_right = 112.0
+margin_right = 246.0
+margin_bottom = 19.0
+rect_min_size = Vector2( 180, 0 )
+custom_fonts/font = ExtResource( 3 )
+text = "Cursor: -"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sep4" type="Label" parent="MarginContainer/HBoxContainer/Left"]
+margin_left = 246.0
+margin_top = 5.0
+margin_right = 254.0
+margin_bottom = 19.0
+custom_fonts/font = ExtResource( 3 )
+text = "|"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ZoomLabel" type="Label" parent="MarginContainer/HBoxContainer/Left"]
+margin_left = 254.0
+margin_top = 5.0
+margin_right = 300.0
 margin_bottom = 19.0
 custom_fonts/font = ExtResource( 3 )
 text = "Zoom: -"
@@ -70,9 +92,9 @@ __meta__ = {
 }
 
 [node name="Sep2" type="Label" parent="MarginContainer/HBoxContainer/Left"]
-margin_left = 112.0
+margin_left = 300.0
 margin_top = 5.0
-margin_right = 120.0
+margin_right = 308.0
 margin_bottom = 19.0
 custom_fonts/font = ExtResource( 3 )
 text = "|"
@@ -81,9 +103,9 @@ __meta__ = {
 }
 
 [node name="PressureLabel" type="Label" parent="MarginContainer/HBoxContainer/Left"]
-margin_left = 120.0
+margin_left = 308.0
 margin_top = 5.0
-margin_right = 180.0
+margin_right = 368.0
 margin_bottom = 19.0
 custom_fonts/font = ExtResource( 3 )
 text = "Pressure: -"
@@ -92,9 +114,9 @@ __meta__ = {
 }
 
 [node name="Sep3" type="Label" parent="MarginContainer/HBoxContainer/Left"]
-margin_left = 180.0
+margin_left = 368.0
 margin_top = 5.0
-margin_right = 188.0
+margin_right = 376.0
 margin_bottom = 19.0
 custom_fonts/font = ExtResource( 3 )
 text = "|"
@@ -103,9 +125,9 @@ __meta__ = {
 }
 
 [node name="FpsLabel" type="Label" parent="MarginContainer/HBoxContainer/Left"]
-margin_left = 188.0
+margin_left = 376.0
 margin_top = 5.0
-margin_right = 223.0
+margin_right = 411.0
 margin_bottom = 19.0
 custom_fonts/font = ExtResource( 3 )
 text = "FPS: -"

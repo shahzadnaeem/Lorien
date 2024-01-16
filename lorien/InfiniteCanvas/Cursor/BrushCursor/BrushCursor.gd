@@ -9,12 +9,6 @@ func _draw():
 	draw_circle(Vector2.ZERO, radius*0.25, Color.black)
 
 # -------------------------------------------------------------------------------------------------
-func set_pressure(pressure: float) -> void:
-	if pressure <= 1.0:
-		_pressure = pressure
-		update()
-
-# -------------------------------------------------------------------------------------------------
 func change_size(brush_size: int) -> void:
 	_brush_size = brush_size
 	update()

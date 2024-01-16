@@ -19,6 +19,7 @@ const UI_SCALE_CUSTOM_INDEX := 1
 signal ui_scale_changed
 signal canvas_color_changed(color)
 signal grid_size_changed(size)
+signal grid_angle_changed(angle)
 signal grid_pattern_changed(pattern)
 
 # -------------------------------------------------------------------------------------------------
@@ -42,6 +43,7 @@ onready var _brush_rounding_options: OptionButton = $MarginContainer/TabContaine
 onready var _ui_scale_options: OptionButton = $MarginContainer/TabContainer/Appearance/VBoxContainer/UIScale/HBoxContainer/UIScaleOptions
 onready var _ui_scale: SpinBox = $MarginContainer/TabContainer/Appearance/VBoxContainer/UIScale/HBoxContainer/UIScale
 onready var _grid_size: SpinBox = $MarginContainer/TabContainer/Appearance/VBoxContainer/GridSize/GridSize
+onready var _grid_angle: SpinBox = $MarginContainer/TabContainer/Appearance/VBoxContainer/GridAngle/GridAngle
 onready var _grid_pattern: OptionButton = $MarginContainer/TabContainer/Appearance/VBoxContainer/GridPattern/GridPattern
 
 # -------------------------------------------------------------------------------------------------
@@ -72,6 +74,7 @@ func _set_values() -> void:
 	var ui_scale = Settings.get_value(Settings.APPEARANCE_UI_SCALE, Config.DEFAULT_UI_SCALE)
 	var grid_pattern = Settings.get_value(Settings.APPEARANCE_GRID_PATTERN, Config.DEFAULT_GRID_PATTERN)
 	var grid_size = Settings.get_value(Settings.APPEARANCE_GRID_SIZE, Config.DEFAULT_GRID_SIZE)
+	var grid_angle = Settings.get_value(Settings.APPEARANCE_GRID_ANGLE, Config.DEFAULT_GRID_ANGLE)
 	
 	match theme:
 		Types.UITheme.DARK: _theme.selected = THEME_DARK_INDEX
@@ -94,6 +97,7 @@ func _set_values() -> void:
 	_brush_size.value = brush_size
 	_canvas_color.color = canvas_color
 	_grid_size.value = grid_size
+	_grid_angle.value = grid_angle
 	match grid_pattern:
 		Types.GridPattern.DOTS: _grid_pattern.selected = GRID_PATTERN_DOTS_INDEX
 		Types.GridPattern.LINES: _grid_pattern.selected = GRID_PATTERN_LINES_INDEX
@@ -155,6 +159,11 @@ func _on_CanvasColor_color_changed(color: Color) -> void:
 func _on_GridSize_value_changed(value: int) -> void:
 	Settings.set_value(Settings.APPEARANCE_GRID_SIZE, value)
 	emit_signal("grid_size_changed", value)
+
+# -------------------------------------------------------------------------------------------------
+func _on_GridAngle_value_changed(value: float) -> void:
+	Settings.set_value(Settings.APPEARANCE_GRID_ANGLE, value)
+	emit_signal("grid_angle_changed", value)
 	
 # -------------------------------------------------------------------------------------------------
 func _on_GridPattern_item_selected(index: int) -> void:

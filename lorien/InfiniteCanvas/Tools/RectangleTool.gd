@@ -2,16 +2,11 @@ class_name RectangleTool
 extends CanvasTool
 
 # -------------------------------------------------------------------------------------------------
-const PRESSURE := 0.5
-
-# -------------------------------------------------------------------------------------------------
 export var pressure_curve: Curve
 var _start_position_top_left: Vector2
 
 # -------------------------------------------------------------------------------------------------
 func tool_event(event: InputEvent) -> void:
-	#_cursor.set_pressure(1.0)
-
 	var should_draw_square := Input.is_key_pressed(KEY_SHIFT)
 	var hold_pressure := Input.is_key_pressed(KEY_CONTROL)
 
@@ -38,10 +33,10 @@ func tool_event(event: InputEvent) -> void:
 
 # -------------------------------------------------------------------------------------------------
 func _make_rectangle(pressure: float, should_draw_square:bool) -> void:
-	var bottom_right_point := _cursor.global_position
+	var bottom_right := _cursor.global_position
 
-	var height := bottom_right_point.y - _start_position_top_left.y
-	var width  := bottom_right_point.x - _start_position_top_left.x
+	var height := bottom_right.y - _start_position_top_left.y
+	var width  := bottom_right.x - _start_position_top_left.x
 	
 	var hs = sign(height)
 	var ws = sign(width)
@@ -51,18 +46,25 @@ func _make_rectangle(pressure: float, should_draw_square:bool) -> void:
 		width = height*ws
 		height = height*hs
 		
-		bottom_right_point.y = _start_position_top_left.y + height
-		bottom_right_point.x = _start_position_top_left.x + width
+		bottom_right.y = _start_position_top_left.y + height
+		bottom_right.x = _start_position_top_left.x + width
+		
+	var min_x = min(_start_position_top_left.x, bottom_right.x)
+	var min_y = min(_start_position_top_left.y, bottom_right.y)
 	
-	var top_right_point   := _start_position_top_left + Vector2(width, 0)
-	var bottom_left_point := _start_position_top_left + Vector2(0, height)
+	width = abs(width)
+	height = abs(height)
+
+	var top_left    := Vector2(min_x,min_y)
+	var top_right   := top_left + Vector2(width, 0)
+	bottom_right    =  top_right + Vector2(0, height)
+	var bottom_left := top_left + Vector2(0, height)
 	
-	var w_offset := Vector2(width*0.02, 0)
-	var h_offset := Vector2(0,height*0.02)
-	
-	add_subdivided_line(_start_position_top_left, top_right_point - w_offset, pressure)
-	add_subdivided_line(top_right_point, bottom_right_point - h_offset, pressure)
-	add_subdivided_line(bottom_right_point, bottom_left_point + w_offset, pressure)
-	add_subdivided_line(bottom_left_point, _start_position_top_left + h_offset, pressure)
-	# TODO: Need this gap filler - not correct soln
-	add_subdivided_line(_start_position_top_left, _start_position_top_left + h_offset, pressure)
+	# Trace out the rectangle
+	add_stroke_point(top_left, pressure)
+	add_stroke_point(top_right, pressure)
+	add_stroke_point(bottom_right, pressure)
+	add_stroke_point(bottom_left, pressure)
+	# overlap to ensure SVG does not have gap at top left corner
+	add_stroke_point(top_left, pressure)
+	add_stroke_point(top_right, pressure)

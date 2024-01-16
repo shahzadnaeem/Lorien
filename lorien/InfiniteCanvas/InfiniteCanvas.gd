@@ -136,7 +136,7 @@ func use_tool(tool_type: int) -> void:
 func set_background_color(color: Color) -> void:
 	_background_color = color
 	VisualServer.set_default_clear_color(_background_color)
-	_grid.set_canvas_color(_background_color)
+	_grid.set_canvas_color(Color.darkkhaki * 0.3)  ##x _background_color)
 
 # -------------------------------------------------------------------------------------------------
 func enable_colliders(enable: bool) -> void:
@@ -180,6 +180,7 @@ func get_all_strokes() -> Array:
 # -------------------------------------------------------------------------------------------------
 func enable() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	
 	_camera.enable_input()
 	_active_tool.enabled = true
 	_is_enabled = true
@@ -187,6 +188,7 @@ func enable() -> void:
 # -------------------------------------------------------------------------------------------------
 func disable() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
 	_camera.disable_input()
 	_active_tool.enabled = false
 	_is_enabled = false
@@ -219,9 +221,6 @@ func add_stroke_point(point: Vector2, pressure: float = 1.0) -> void:
 		_optimizer.optimize(_current_stroke)
 	_current_stroke.refresh()
 
-func set_stroke_pressures(pressure: float) -> void:
-	_current_stroke.set_pressures(pressure)
-	
 # -------------------------------------------------------------------------------------------------
 func remove_last_stroke_point() -> void:
 	_current_stroke.remove_last_point()
@@ -231,6 +230,12 @@ func remove_all_stroke_points() -> void:
 	_current_stroke.remove_all_points()
 
 # -------------------------------------------------------------------------------------------------
+func print_stroke() -> void:
+	if _current_stroke != null:
+		for i in range(_current_stroke.points.size()):
+			print( "point %d: %s @ %s" % [ i, _current_stroke.points[i], _current_stroke.pressures[i] ] )
+
+# -------------------------------------------------------------------------------------------------
 func end_stroke() -> void:
 	if _current_stroke != null:
 		var points: Array = _current_stroke.points
@@ -238,16 +243,19 @@ func end_stroke() -> void:
 			_strokes_parent.remove_child(_current_stroke)
 			_current_stroke.queue_free()
 		else:
-			if _use_optimizer:
-				print("Stroke points: %d (%d removed by optimizer)" % [
-					_current_stroke.points.size(), 
-					_optimizer.points_removed,
-				])
-			else:
-				print("Stroke points: %d" % _current_stroke.points.size())
-			
+			if false:
+				if _use_optimizer:
+					print("Stroke points: %d (%d removed by optimizer)" % [
+						_current_stroke.points.size(), 
+						_optimizer.points_removed,
+					])
+				else:
+					print("Stroke points: %d" % _current_stroke.points.size())
+
+			#print_stroke()
+
 			# TODO: not sure if needed here
-			_current_stroke.refresh()
+			#_current_stroke.refresh()
 			
 			# Colliders for the platformer easter-egg
 			if _colliders_enabled:
@@ -255,7 +263,7 @@ func end_stroke() -> void:
 			
 			# Remove the line temporally from the node tree, so the adding is registered in the undo-redo histrory below
 			_strokes_parent.remove_child(_current_stroke)
-			
+
 			_current_project.undo_redo.create_action("Stroke")
 			_current_project.undo_redo.add_undo_method(self, "undo_last_stroke")
 			_current_project.undo_redo.add_undo_reference(_current_stroke)

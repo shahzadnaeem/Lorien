@@ -17,6 +17,7 @@ const MIN_VECTOR2 := -MAX_VECTOR2
 # ------------------------------------------------------------------------------------------------
 onready var _line2d: Line2D = $Line2D
 onready var _visibility_notifier: VisibilityNotifier2D = $VisibilityNotifier2D
+
 var color: Color setget set_color, get_color
 var size: int
 var points: Array # Array<Vector2>
@@ -100,19 +101,6 @@ func add_point(point: Vector2, pressure: float) -> void:
 	
 	points.append(point)
 	pressures.append(converted_pressure)
-
-# -------------------------------------------------------------------------------------------------
-func set_pressures(pressure:float) -> void:
-	var new_pressures : Array
-	var i: int = 0
-	
-	for p in pressures:
-		new_pressures.append(pressure)
-		i += 1
-
-	pressures = new_pressures
-	
-	print( "points in stroke: %d" % i)
 
 # ------------------------------------------------------------------------------------------------
 func remove_last_point() -> void:

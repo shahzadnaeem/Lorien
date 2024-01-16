@@ -50,6 +50,7 @@ STATUSBAR_PRESSURE              Pressure
 STATUSBAR_FPS                   FPS
 STATUSBAR_STROKES               Strokes
 STATUSBAR_POINTS                Points
+STATUSBAR_CURSOR                Cursor
 
 # -----------------------------------------------------------------------------
 # Settings strings
@@ -70,6 +71,7 @@ SETTINGS_UI_SCALE               UI Scale
 SETTINGS_UI_SCALE_AUTO          Auto
 SETTINGS_UI_SCALE_CUSTOM        Custom
 SETTINGS_GRID_SIZE              Grid Size
+SETTINGS_GRID_ANGLE             Grid Angle
 SETTINGS_GRID_PATTERN           Grid Pattern
 SETTINGS_CANVAS_COLOR           Canvas Color
 SETTINGS_AA_METHOD              Anti Aliasing Method

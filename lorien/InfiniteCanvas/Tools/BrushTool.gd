@@ -17,7 +17,7 @@ var _first_point := false
 
 # -------------------------------------------------------------------------------------------------
 func tool_event(event: InputEvent) -> void:
-	_cursor.set_pressure(1.0)
+	#_cursor.set_pressure(1.0)
 	
 	if event is InputEventMouseMotion:
 		_current_position = event.position

@@ -13,7 +13,6 @@
 [sub_resource type="StyleBoxEmpty" id=2]
 
 [node name="SettingsDialog" type="WindowDialog"]
-visible = true
 margin_right = 520.0
 margin_bottom = 250.0
 rect_min_size = Vector2( 520, 270 )
@@ -43,7 +42,6 @@ __meta__ = {
 }
 
 [node name="General" type="Control" parent="MarginContainer/TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 27.0
@@ -177,6 +175,7 @@ text = "SETTINGS_RESTART_NOTICE"
 align = 1
 
 [node name="Appearance" type="Control" parent="MarginContainer/TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 27.0
@@ -334,6 +333,29 @@ min_value = 8.0
 max_value = 256.0
 value = 12.0
 allow_greater = true
+
+[node name="GridAngle" type="HBoxContainer" parent="MarginContainer/TabContainer/Appearance/VBoxContainer"]
+margin_top = 124.0
+margin_right = 496.0
+margin_bottom = 145.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MarginContainer/TabContainer/Appearance/VBoxContainer/GridAngle"]
+margin_top = 2.0
+margin_right = 246.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+size_flags_vertical = 6
+text = "SETTINGS_GRID_ANGLE"
+
+[node name="GridAngle" type="SpinBox" parent="MarginContainer/TabContainer/Appearance/VBoxContainer/GridAngle"]
+margin_left = 250.0
+margin_right = 496.0
+margin_bottom = 21.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -45.0
+max_value = 45.0
 
 [node name="HSeparator5" type="HSeparator" parent="MarginContainer/TabContainer/Appearance/VBoxContainer"]
 margin_top = 149.0
@@ -501,6 +523,7 @@ window_title = "KEYBINDING_DIALOG_BIND_WINDOW_NAME"
 [node name="ConfirmRebind" type="ConfirmationDialog" parent="MarginContainer/TabContainer/Keybindings/AddKeyDialog"]
 margin_right = 200.0
 margin_bottom = 70.0
+rect_min_size = Vector2( 300, 105 )
 popup_exclusive = true
 window_title = "KEYBINDING_DIALOG_REBIND_WINDOW_NAME"
 dialog_autowrap = true
@@ -516,6 +539,7 @@ dialog_autowrap = true
 [connection signal="color_changed" from="MarginContainer/TabContainer/Appearance/VBoxContainer/CanvasColor/CanvasColor" to="." method="_on_CanvasColor_color_changed"]
 [connection signal="item_selected" from="MarginContainer/TabContainer/Appearance/VBoxContainer/GridPattern/GridPattern" to="." method="_on_GridPattern_item_selected"]
 [connection signal="value_changed" from="MarginContainer/TabContainer/Appearance/VBoxContainer/GridSize/GridSize" to="." method="_on_GridSize_value_changed"]
+[connection signal="value_changed" from="MarginContainer/TabContainer/Appearance/VBoxContainer/GridAngle/GridAngle" to="." method="_on_GridAngle_value_changed"]
 [connection signal="item_selected" from="MarginContainer/TabContainer/Rendering/VBoxContainer/AntiAliasing/AntiAliasing" to="." method="_on_AntiAliasing_item_selected"]
 [connection signal="item_selected" from="MarginContainer/TabContainer/Rendering/VBoxContainer/BrushRounding/OptionButton" to="." method="_on_Brush_rounding_item_selected"]
 [connection signal="value_changed" from="MarginContainer/TabContainer/Rendering/VBoxContainer/TargetFramerate/TargetFramerate" to="." method="_on_Target_Fps_Foreground_changed"]

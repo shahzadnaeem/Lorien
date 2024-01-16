@@ -47,7 +47,6 @@ cursor_path = NodePath("../Viewport/BrushCursor")
 [node name="LineTool" type="Node" parent="."]
 script = ExtResource( 6 )
 cursor_path = NodePath("../Viewport/BrushCursor")
-pressure_curve = ExtResource( 3 )
 
 [node name="SelectionTool" type="Node" parent="."]
 script = ExtResource( 7 )
