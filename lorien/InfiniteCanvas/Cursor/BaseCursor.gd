@@ -5,10 +5,6 @@ extends Sprite
 var _brush_size: int
 var _pressure := 1.0
 
-# Only update pressure some ms after previous update - can drop to 0 when pen is lifted otherwise
-const PRESSURE_TICKS:int = 100
-var _last_pressure_tick := 0
-
 onready var _camera: Camera2D = get_viewport().get_node("Camera2D")
 
 # -------------------------------------------------------------------------------------------------
@@ -25,6 +21,12 @@ func _update_position():
 	global_position = _camera.get_global_mouse_position()
 
 # -------------------------------------------------------------------------------------------------
+
+# Only update pressure some ms after previous update - can drop to 0 when pen is lifted otherwise
+const PRESSURE_TICKS:int = 100
+var _last_pressure_tick := 0
+
+
 func set_pressure(pressure: float) -> void:
 	var now := Time.get_ticks_msec()
 	

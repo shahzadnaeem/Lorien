@@ -9,6 +9,7 @@ onready var _position_label: Label = $MarginContainer/HBoxContainer/Left/Positio
 onready var _zoom_label: Label = $MarginContainer/HBoxContainer/Left/ZoomLabel
 onready var _fps_label: Label = $MarginContainer/HBoxContainer/Left/FpsLabel
 onready var _cursor_label = $MarginContainer/HBoxContainer/Left/CursorLabel
+onready var _cursor_label2 = $MarginContainer/HBoxContainer/Left/CursorLabel2
 
 var _str_position: String
 var _str_cursor: String
@@ -39,7 +40,8 @@ func set_camera_position(pos: Vector2) -> void:
 
 # -------------------------------------------------------------------------------------------------
 func set_cursor_position(pos: Vector2, cam: Vector2) -> void:
-	_cursor_label.text = "%s: %d, %d [%d, %d]" % [_str_cursor, pos.x, pos.y, pos.x-cam.x, pos.y-cam.y]
+	_cursor_label.text = "%s: %d, %d" % [_str_cursor, pos.x, pos.y]
+	_cursor_label2.text = "[%d, %d]" % [pos.x-cam.x, pos.y-cam.y]
 
 # -------------------------------------------------------------------------------------------------
 func set_camera_zoom(zoom: float) -> void:

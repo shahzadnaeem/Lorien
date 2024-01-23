@@ -1,5 +1,5 @@
 class_name CanvasTool, "res://Assets/Icons/tools.png"
-extends Node
+extends Types # isA Node
 
 # -------------------------------------------------------------------------------------------------
 const SUBDIVISION_PERCENT := 0.2
@@ -23,6 +23,13 @@ func _ready():
 func tool_event(event: InputEvent) -> void:
 	pass
 
+func key_modifiers() -> StdKeys:
+	var res := StdKeys.new()
+
+	res.shift = Input.is_key_pressed(KEY_SHIFT)
+	res.ctrl  = Input.is_key_pressed(KEY_CONTROL)
+	
+	return res
 # -------------------------------------------------------------------------------------------------
 func _on_brush_color_changed(color: Color) -> void:
 	pass

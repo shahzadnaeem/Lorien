@@ -24,6 +24,8 @@ func _init():
 # -------------------------------------------------------------------------------------------------
 func tool_event(event: InputEvent) -> void:
 	#_cursor.set_pressure(1.0)
+	##xSN var mods = key_modifiers()
+	##xSN print("Circle: key modifiers: %s" % mods)
 	
 	var should_draw_circle := Input.is_key_pressed(KEY_SHIFT)
 	var hold_pressure := Input.is_key_pressed(KEY_CONTROL)

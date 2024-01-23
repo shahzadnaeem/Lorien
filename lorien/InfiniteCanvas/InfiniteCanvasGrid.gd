@@ -10,6 +10,8 @@ var _grid_size := Config.DEFAULT_GRID_SIZE
 var _grid_color: Color
 var _grid_angle := Config.DEFAULT_GRID_ANGLE
 
+var _font:DynamicFont
+
 # -------------------------------------------------------------------------------------------------
 func _ready():
 	_grid_size = Settings.get_value(Settings.APPEARANCE_GRID_SIZE, Config.DEFAULT_GRID_SIZE)
@@ -20,6 +22,10 @@ func _ready():
 	_camera.connect("zoom_changed", self, "_on_zoom_changed")
 	_camera.connect("position_changed", self, "_on_position_changed")
 	get_viewport().connect("size_changed", self, "_on_viewport_size_changed")
+	
+	_font = DynamicFont.new()
+	_font.font_data = load("res://Assets/Fonts/Inter-Regular.ttf")
+	_font.set_size(32)
 
 # -------------------------------------------------------------------------------------------------
 func enable(e: bool) -> void:
@@ -27,7 +33,9 @@ func enable(e: bool) -> void:
 	visible = e
 
 # -------------------------------------------------------------------------------------------------
-func _on_zoom_changed(zoom: float) -> void: update()
+func _on_zoom_changed(zoom_value: float) -> void:
+	update()
+
 func _on_position_changed(pos: Vector2) -> void: update()
 func _on_viewport_size_changed() -> void: update()
 
@@ -104,6 +112,11 @@ func _draw() -> void:
 
 	draw_line(middle + Vector2( -50, 0), middle + Vector2( 50, 0), Color.white * 0.3, 2.0)
 	draw_line(middle + Vector2( 0, -50), middle + Vector2( 0, 50), Color.white * 0.3, 2.0)
+	
+	var page_x := int(floor(offset.x/size.x)+1)
+	var page_y := int(floor(offset.y/size.y)+1)
+	
+	draw_string(_font, middle + Vector2(25,-25), "Page (%d,%d)" % [page_x, page_y], _grid_color)
 
 	_set_grid_transform(middle)
 	
