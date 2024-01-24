@@ -22,7 +22,6 @@ onready var _edit_palette_dialog: EditPaletteDialog = $EditPaletteDialog
 
 var _ui_visible := true 
 var _player_enabled := false
-
 # -------------------------------------------------------------------------------------------------
 func _ready():
 	# Init stuff
@@ -47,6 +46,7 @@ func _ready():
 	_toolbar.connect("save_project", self, "_on_save_project")
 	_toolbar.connect("brush_size_changed", self, "_on_brush_size_changed")
 	_toolbar.connect("tool_changed", self, "_on_tool_changed")
+	_toolbar.connect("toggle_grid", self, "_on_toggle_grid")
 	
 	_menubar.connect("create_new_project", self, "_on_create_new_project")
 	_menubar.connect("project_selected", self, "_on_project_selected")
@@ -336,6 +336,23 @@ func _on_brush_color_changed(color: Color) -> void:
 # -------------------------------------------------------------------------------------------------
 func _on_brush_size_changed(size: int) -> void:
 	_canvas.set_brush_size(size)
+
+# -------------------------------------------------------------------------------------------------
+func _on_toggle_grid(on):
+	# TODO: Does not need this parameter as can look at Settings
+	
+	var state = Settings.get_value(Settings.APPEARANCE_GRID_PATTERN, Config.DEFAULT_GRID_PATTERN) != Types.GridPattern.NONE
+	
+	state = !state
+	
+	if state != on:
+		print("Grid state mismatch!")
+	
+	if on:
+		var last_grid_pattern = Settings.get_value(Settings.APPEARANCE_LAST_GRID_PATTERN, Config.DEFAULT_GRID_PATTERN)
+		_settings_dialog._on_GridPattern_item_selected(last_grid_pattern)
+	else:
+		_settings_dialog._on_GridPattern_item_selected(Types.GridPattern.NONE)
 
 # -------------------------------------------------------------------------------------------------
 func _on_grid_size_changed(size: int) -> void:

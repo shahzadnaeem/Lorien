@@ -10,6 +10,7 @@ signal redo_action
 signal toggle_brush_color_picker
 signal brush_size_changed(size)
 signal tool_changed(t)
+signal toggle_grid(state)
 
 # -------------------------------------------------------------------------------------------------
 const BUTTON_HOVER_COLOR = Color("50ffd6")
@@ -18,6 +19,8 @@ const BUTTON_NORMAL_COLOR = Color.white
 
 # -------------------------------------------------------------------------------------------------
 export var file_dialog_path: NodePath
+
+onready var _settings_dialog: WindowDialog = $"%SettingsDialog"
 
 onready var _new_button: TextureButton = $Console/Left/NewFileButton
 onready var _save_button: TextureButton = $Console/Left/SaveFileButton
@@ -35,8 +38,10 @@ onready var _tool_btn_circle: TextureButton = $Console/Left/CircleToolButton
 onready var _tool_btn_line: TextureButton = $Console/Left/LineToolButton
 onready var _tool_btn_eraser: TextureButton = $Console/Left/EraserToolButton
 onready var _tool_btn_selection: TextureButton = $Console/Left/SelectionToolButton
+onready var _grid_btn = $Console/Right/GridButton
 
 var _last_active_tool_button: TextureButton
+var grid_enabled: bool
 
 # -------------------------------------------------------------------------------------------------
 func _ready():
@@ -45,8 +50,18 @@ func _ready():
 	_brush_size_slider.value = brush_size
 	_last_active_tool_button = _tool_btn_brush
 
-# Button clicked callbacks
+	update_grid()
+	
+	_settings_dialog.connect("grid_pattern_changed", self, "_on_grid_pattern_changed")
+
 # -------------------------------------------------------------------------------------------------
+func update_grid():
+	grid_enabled = Settings.get_value(Settings.APPEARANCE_GRID_PATTERN, Config.DEFAULT_GRID_PATTERN) != Types.GridPattern.NONE
+	_grid_btn.set_pressed(grid_enabled)
+
+# -------------------------------------------------------------------------------------------------
+# Button clicked callbacks
+
 func _on_NewFileButton_pressed(): emit_signal("new_project")
 func _on_ClearCanvasButton_pressed(): emit_signal("clear_canvas")
 func _on_UndoButton_pressed(): emit_signal("undo_action")
@@ -152,6 +167,15 @@ func _on_SelectToolButton_pressed():
 # -------------------------------------------------------------------------------------------------
 func _on_FullscreenButton_toggled(button_pressed):
 	OS.set_window_fullscreen(button_pressed)
+
+# -------------------------------------------------------------------------------------------------
+# OUT
+func _on_toggle_grid(state):
+	emit_signal("toggle_grid", state)
+
+# IN
+func _on_grid_pattern_changed(pattern):
+	update_grid()
 
 # -------------------------------------------------------------------------------------------------
 func _change_active_tool_button(btn: TextureButton) -> void:

@@ -51,6 +51,8 @@ func _ready():
 	_set_values()
 	_apply_language()
 	GlobalSignals.connect("language_changed", self, "_apply_language")
+	
+	connect("about_to_show",self,"_set_grid_pattern")
 
 # -------------------------------------------------------------------------------------------------
 func _apply_language() -> void:
@@ -60,6 +62,16 @@ func _apply_language() -> void:
 	_tab_container.set_tab_title(3, tr("SETTINGS_KEYBINDINGS"))
 
 # -------------------------------------------------------------------------------------------------
+
+func _set_grid_pattern() -> void:
+	var grid_pattern = Settings.get_value(Settings.APPEARANCE_GRID_PATTERN, Config.DEFAULT_GRID_PATTERN)
+
+	match grid_pattern:
+		Types.GridPattern.DOTS: _grid_pattern.selected = GRID_PATTERN_DOTS_INDEX
+		Types.GridPattern.LINES: _grid_pattern.selected = GRID_PATTERN_LINES_INDEX
+		Types.GridPattern.NONE: _grid_pattern.selected = GRID_PATTERN_NONE_INDEX
+
+
 func _set_values() -> void:
 	var brush_size = Settings.get_value(Settings.GENERAL_DEFAULT_BRUSH_SIZE, Config.DEFAULT_BRUSH_SIZE)
 	var canvas_color = Settings.get_value(Settings.APPEARANCE_CANVAS_COLOR, Config.DEFAULT_CANVAS_COLOR)
@@ -72,7 +84,7 @@ func _set_values() -> void:
 	var pressure_sensitivity = Settings.get_value(Settings.GENERAL_PRESSURE_SENSITIVITY, Config.DEFAULT_PRESSURE_SENSITIVITY)
 	var ui_scale_mode = Settings.get_value(Settings.APPEARANCE_UI_SCALE_MODE, Config.DEFAULT_UI_SCALE_MODE)
 	var ui_scale = Settings.get_value(Settings.APPEARANCE_UI_SCALE, Config.DEFAULT_UI_SCALE)
-	var grid_pattern = Settings.get_value(Settings.APPEARANCE_GRID_PATTERN, Config.DEFAULT_GRID_PATTERN)
+#	var last_grid_pattern = Settings.get_value(Settings.APPEARANCE_LAST_GRID_PATTERN, Config.DEFAULT_GRID_PATTERN)
 	var grid_size = Settings.get_value(Settings.APPEARANCE_GRID_SIZE, Config.DEFAULT_GRID_SIZE)
 	var grid_angle = Settings.get_value(Settings.APPEARANCE_GRID_ANGLE, Config.DEFAULT_GRID_ANGLE)
 	
@@ -98,10 +110,9 @@ func _set_values() -> void:
 	_canvas_color.color = canvas_color
 	_grid_size.value = grid_size
 	_grid_angle.value = grid_angle
-	match grid_pattern:
-		Types.GridPattern.DOTS: _grid_pattern.selected = GRID_PATTERN_DOTS_INDEX
-		Types.GridPattern.LINES: _grid_pattern.selected = GRID_PATTERN_LINES_INDEX
-		Types.GridPattern.NONE: _grid_pattern.selected = GRID_PATTERN_NONE_INDEX
+	
+	_set_grid_pattern()
+
 	_project_dir.text = project_dir
 	_foreground_fps.value = foreground_fps
 	_background_fps.value = background_fps
@@ -168,10 +179,15 @@ func _on_GridAngle_value_changed(value: float) -> void:
 # -------------------------------------------------------------------------------------------------
 func _on_GridPattern_item_selected(index: int) -> void:
 	var pattern: int = Types.GridPattern.NONE
+
 	match index:
 		GRID_PATTERN_DOTS_INDEX: 	pattern = Types.GridPattern.DOTS
 		GRID_PATTERN_LINES_INDEX: 	pattern = Types.GridPattern.LINES
+		
 	Settings.set_value(Settings.APPEARANCE_GRID_PATTERN, pattern)
+	if pattern != Types.GridPattern.NONE:
+		Settings.set_value(Settings.APPEARANCE_LAST_GRID_PATTERN, pattern)
+
 	emit_signal("grid_pattern_changed", pattern)
 
 # -------------------------------------------------------------------------------------------------

@@ -66,6 +66,9 @@ func set_grid_angle(angle: float):
 
 # -------------------------------------------------------------------------------------------------
 
+# Transform for grid if a grid angle is set
+#   Translate middle to origin, rotate by angle and translate back to middle
+
 func _set_grid_transform(middle) -> void:
 	var THETA := deg2rad(_grid_angle)
 	
@@ -75,8 +78,10 @@ func _set_grid_transform(middle) -> void:
 	tfm.x.y = sin(THETA)
 	tfm.y.x = -sin(THETA)
 
-	# Calculate translation for restoring to 'centre' - offset as it's relative to 'main'
+	# Calculate translation for restoring to 'middle'
+	#   Apply transform to middle and find out how much it has moved
 	var origin = tfm * middle - middle
+	#   Then use this as a final translation back to middle
 	tfm.origin = -origin
 
 	# print("Middle: %s" % middle)
@@ -110,15 +115,19 @@ func _draw() -> void:
 
 	var middle = Vector2( offset.x + size.x / 2, offset.y + size.y / 2)
 
-	draw_line(middle + Vector2( -50, 0), middle + Vector2( 50, 0), Color.white * 0.3, 2.0)
-	draw_line(middle + Vector2( 0, -50), middle + Vector2( 0, 50), Color.white * 0.3, 2.0)
+	if _pattern != Types.GridPattern.NONE:
+		# Center marker
+		draw_line(middle + Vector2( -50, 0), middle + Vector2( 50, 0), Color.white * 0.3, 2.0)
+		draw_line(middle + Vector2( 0, -50), middle + Vector2( 0, 50), Color.white * 0.3, 2.0)
 	
-	var page_x := int(floor(offset.x/size.x)+1)
-	var page_y := int(floor(offset.y/size.y)+1)
+		# Page 'number' (based on current viewport)
+		var page_x := int(floor(offset.x/size.x)+1)
+		var page_y := int(floor(offset.y/size.y)+1)
 	
-	draw_string(_font, middle + Vector2(25,-25), "Page (%d,%d)" % [page_x, page_y], _grid_color)
+		draw_string(_font, middle + Vector2(25,-25), "Page (%d,%d)" % [page_x, page_y], _grid_color)
 
-	_set_grid_transform(middle)
+	if _grid_angle != 0.0:
+		_set_grid_transform(middle)
 	
 	match _pattern:
 		Types.GridPattern.DOTS:
@@ -134,9 +143,6 @@ func _draw() -> void:
 					draw_rect(Rect2(pos.x, pos.y, dot_size, dot_size), _grid_color)
 
 		Types.GridPattern.LINES:
-			#print("Cam offset: %s, zoom: %s, [%s]" % [ _camera.offset, _camera.zoom, get_transform()])
-			#print("Middle: %s -> %s delta: %s" % [ middle, tfm * middle, tfm * middle - middle ] )
-			
 			# Vertical lines
 			var start_index := int((offset.x - size.x) / grid_size) - 1
 			var end_index := int((2*size.x + offset.x) / grid_size) + 1
