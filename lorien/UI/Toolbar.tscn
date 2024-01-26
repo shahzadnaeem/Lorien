@@ -298,6 +298,30 @@ margin_bottom = 27.0
 custom_fonts/font = ExtResource( 14 )
 text = "12"
 
+[node name="VSeparator5" type="VSeparator" parent="Console/Left"]
+margin_left = 618.0
+margin_right = 622.0
+margin_bottom = 40.0
+custom_styles/separator = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridButton" type="TextureButton" parent="Console/Left"]
+margin_left = 634.0
+margin_top = 12.0
+margin_right = 650.0
+margin_bottom = 28.0
+hint_tooltip = "TOOLBAR_GRID_TOGGLE"
+size_flags_horizontal = 4
+size_flags_vertical = 4
+toggle_mode = true
+action_mode = 0
+texture_normal = ExtResource( 12 )
+script = ExtResource( 13 )
+hover_tint = Color( 0.662745, 0.945098, 0.87451, 1 )
+pressed_tint = Color( 0.572549, 1, 0.894118, 1 )
+
 [node name="Right" type="HBoxContainer" parent="Console"]
 margin_left = 962.0
 margin_right = 1920.0
@@ -310,21 +334,6 @@ alignment = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="GridButton" type="TextureButton" parent="Console/Right"]
-margin_left = 896.0
-margin_top = 12.0
-margin_right = 912.0
-margin_bottom = 28.0
-hint_tooltip = "TOOLBAR_GRID_TOGGLE"
-size_flags_horizontal = 4
-size_flags_vertical = 4
-toggle_mode = true
-action_mode = 0
-texture_normal = ExtResource( 12 )
-script = ExtResource( 13 )
-hover_tint = Color( 0.662745, 0.945098, 0.87451, 1 )
-pressed_tint = Color( 0.572549, 1, 0.894118, 1 )
 
 [node name="FullscreenButton" type="TextureButton" parent="Console/Right"]
 margin_left = 924.0
@@ -361,5 +370,5 @@ custom_styles/separator = SubResource( 2 )
 [connection signal="pressed" from="Console/Left/SelectionToolButton" to="." method="_on_SelectToolButton_pressed"]
 [connection signal="pressed" from="Console/Left/ColorButton" to="." method="_on_ColorButton_pressed"]
 [connection signal="value_changed" from="Console/Left/BrushSizeSlider" to="." method="_on_BrushSizeSlider_value_changed"]
-[connection signal="toggled" from="Console/Right/GridButton" to="." method="_on_toggle_grid"]
+[connection signal="toggled" from="Console/Left/GridButton" to="." method="_on_toggle_grid"]
 [connection signal="toggled" from="Console/Right/FullscreenButton" to="." method="_on_FullscreenButton_toggled"]

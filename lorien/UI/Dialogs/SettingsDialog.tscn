@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://UI/Themes/theme_dark.tres" type="Theme" id=1]
 [ext_resource path="res://UI/Dialogs/SettingsDialog.gd" type="Script" id=2]
 [ext_resource path="res://UI/Components/DelayedSpinBox.gd" type="Script" id=3]
 [ext_resource path="res://UI/Components/KeyBindingsList.gd" type="Script" id=4]
 [ext_resource path="res://UI/Dialogs/AddKeyDialog.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Assets/Icons/undo.png" type="Texture" id=6]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -348,14 +349,30 @@ size_flags_horizontal = 3
 size_flags_vertical = 6
 text = "SETTINGS_GRID_ANGLE"
 
-[node name="GridAngle" type="SpinBox" parent="MarginContainer/TabContainer/Appearance/VBoxContainer/GridAngle"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/TabContainer/Appearance/VBoxContainer/GridAngle"]
+margin_right = 40.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="GridAngle" type="HSlider" parent="MarginContainer/TabContainer/Appearance/VBoxContainer/GridAngle/HBoxContainer"]
 margin_left = 250.0
-margin_right = 496.0
+margin_right = 456.0
 margin_bottom = 21.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-min_value = -45.0
-max_value = 45.0
+max_value = 85.0
+step = 5.0
+
+[node name="Value" type="Label" parent="MarginContainer/TabContainer/Appearance/VBoxContainer/GridAngle/HBoxContainer"]
+margin_right = 4.0
+margin_bottom = 17.0
+text = "?"
+
+[node name="ResetAngle" type="TextureButton" parent="MarginContainer/TabContainer/Appearance/VBoxContainer/GridAngle/HBoxContainer"]
+margin_right = 40.0
+margin_bottom = 40.0
+texture_normal = ExtResource( 6 )
 
 [node name="HSeparator5" type="HSeparator" parent="MarginContainer/TabContainer/Appearance/VBoxContainer"]
 margin_top = 149.0
@@ -539,7 +556,8 @@ dialog_autowrap = true
 [connection signal="color_changed" from="MarginContainer/TabContainer/Appearance/VBoxContainer/CanvasColor/CanvasColor" to="." method="_on_CanvasColor_color_changed"]
 [connection signal="item_selected" from="MarginContainer/TabContainer/Appearance/VBoxContainer/GridPattern/GridPattern" to="." method="_on_GridPattern_item_selected"]
 [connection signal="value_changed" from="MarginContainer/TabContainer/Appearance/VBoxContainer/GridSize/GridSize" to="." method="_on_GridSize_value_changed"]
-[connection signal="value_changed" from="MarginContainer/TabContainer/Appearance/VBoxContainer/GridAngle/GridAngle" to="." method="_on_GridAngle_value_changed"]
+[connection signal="value_changed" from="MarginContainer/TabContainer/Appearance/VBoxContainer/GridAngle/HBoxContainer/GridAngle" to="." method="_on_GridAngle_value_changed"]
+[connection signal="pressed" from="MarginContainer/TabContainer/Appearance/VBoxContainer/GridAngle/HBoxContainer/ResetAngle" to="." method="_on_GridAngle_reset"]
 [connection signal="item_selected" from="MarginContainer/TabContainer/Rendering/VBoxContainer/AntiAliasing/AntiAliasing" to="." method="_on_AntiAliasing_item_selected"]
 [connection signal="item_selected" from="MarginContainer/TabContainer/Rendering/VBoxContainer/BrushRounding/OptionButton" to="." method="_on_Brush_rounding_item_selected"]
 [connection signal="value_changed" from="MarginContainer/TabContainer/Rendering/VBoxContainer/TargetFramerate/TargetFramerate" to="." method="_on_Target_Fps_Foreground_changed"]

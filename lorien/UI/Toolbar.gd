@@ -38,7 +38,7 @@ onready var _tool_btn_circle: TextureButton = $Console/Left/CircleToolButton
 onready var _tool_btn_line: TextureButton = $Console/Left/LineToolButton
 onready var _tool_btn_eraser: TextureButton = $Console/Left/EraserToolButton
 onready var _tool_btn_selection: TextureButton = $Console/Left/SelectionToolButton
-onready var _grid_btn = $Console/Right/GridButton
+onready var _grid_btn = $Console/Left/GridButton
 
 var _last_active_tool_button: TextureButton
 var grid_enabled: bool

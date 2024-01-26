@@ -107,27 +107,44 @@ func _set_grid_transform(middle) -> void:
 #	var tfmt := tfm2 * tfm3  # NOTE: when applied to a point, tfm3 is applied first, as is required
 #	print("Tfmt: %s" % tfmt)
 
+func _draw_page_indicators(size:Vector2, grid_size: int, offset:Vector2, vp_middle:Vector2) -> void:
+	# Page border
+	var border_points := PoolVector2Array()
+	
+	# TODO: This is using screen coordinates which is why page border is screen, rather than page
+	border_points.push_back(Vector2(offset.x+10,offset.y+10))
+	border_points.push_back(Vector2(offset.x+size.x-10,offset.y+10))
+	border_points.push_back(Vector2(offset.x+size.x-10,offset.y+size.y-10))
+	border_points.push_back(Vector2(offset.x+10,offset.y+size.y-10))
+	border_points.push_back(Vector2(offset.x+10,offset.y+10))
+
+	draw_polyline(border_points,Color.dimgray,5.0)
+	
+	# Center marker - viewport coords
+	draw_line(vp_middle + Vector2( -50, 0), vp_middle + Vector2( 50, 0), Color.white * 0.3, 2.0)
+	draw_line(vp_middle + Vector2( 0, -50), vp_middle + Vector2( 0, 50), Color.white * 0.3, 2.0)
+	
+	# Page 'number' (TODO: should be absolute coords, based on current viewport size)
+	var page_x := int(floor(offset.x/size.x)+1)
+	var page_y := int(floor(offset.y/size.y)+1)
+	
+	draw_string(_font, vp_middle + Vector2(25,-25), "Page (%d,%d)" % [page_x, page_y], _grid_color)
+
 func _draw() -> void:
 	var size = get_viewport().size  * _camera.zoom
 	var zoom = _camera.zoom.x
 	var offset = _camera.offset
-	var grid_size := int(ceil((_grid_size * pow(zoom, 0.75))))
+	var grid_size_zoomed := int(ceil((_grid_size * pow(zoom, 0.75))))
+	var grid_size := int(_grid_size)
 
-	var middle = Vector2( offset.x + size.x / 2, offset.y + size.y / 2)
+	# NOTE: This is viewport middle
+	var vp_middle = Vector2( offset.x + size.x / 2, offset.y + size.y / 2)
 
 	if _pattern != Types.GridPattern.NONE:
-		# Center marker
-		draw_line(middle + Vector2( -50, 0), middle + Vector2( 50, 0), Color.white * 0.3, 2.0)
-		draw_line(middle + Vector2( 0, -50), middle + Vector2( 0, 50), Color.white * 0.3, 2.0)
-	
-		# Page 'number' (based on current viewport)
-		var page_x := int(floor(offset.x/size.x)+1)
-		var page_y := int(floor(offset.y/size.y)+1)
-	
-		draw_string(_font, middle + Vector2(25,-25), "Page (%d,%d)" % [page_x, page_y], _grid_color)
+		_draw_page_indicators(size, grid_size,offset,vp_middle)
 
 	if _grid_angle != 0.0:
-		_set_grid_transform(middle)
+		_set_grid_transform(vp_middle)
 	
 	match _pattern:
 		Types.GridPattern.DOTS:

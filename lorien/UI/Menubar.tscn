@@ -1,14 +1,16 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://UI/Themes/theme_dark.tres" type="Theme" id=1]
 [ext_resource path="res://UI/Menubar.gd" type="Script" id=2]
 [ext_resource path="res://Assets/Icons/menu.png" type="Texture" id=3]
 [ext_resource path="res://UI/Components/FlatTextureButton.gd" type="Script" id=4]
-[ext_resource path="res://Assets/Fonts/font_big.tres" type="DynamicFont" id=5]
+[ext_resource path="res://Assets/Icons/plus.png" type="Texture" id=6]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
 [sub_resource type="StyleBoxEmpty" id=2]
+
+[sub_resource type="StyleBoxEmpty" id=3]
 
 [node name="Menubar" type="Panel"]
 anchor_right = 1.0
@@ -38,6 +40,7 @@ margin_left = 16.0
 margin_top = 10.0
 margin_right = 34.0
 margin_bottom = 28.0
+hint_tooltip = "Menu"
 size_flags_horizontal = 4
 size_flags_vertical = 6
 action_mode = 0
@@ -65,16 +68,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NewFileButton" type="Button" parent="Left"]
+[node name="VSeparator" type="VSeparator" parent="Left"]
 margin_left = 108.0
-margin_top = 12.0
-margin_right = 129.0
+margin_right = 112.0
 margin_bottom = 38.0
+custom_styles/separator = SubResource( 3 )
+
+[node name="NewFileButton" type="TextureButton" parent="Left"]
+modulate = Color( 0.705882, 0.705882, 0.705882, 1 )
+margin_left = 116.0
+margin_top = 11.0
+margin_right = 132.0
+margin_bottom = 27.0
+hint_tooltip = "New Tab"
 size_flags_horizontal = 4
-size_flags_vertical = 8
-custom_fonts/font = ExtResource( 5 )
-text = "+"
-flat = true
+size_flags_vertical = 6
+texture_normal = ExtResource( 6 )
+script = ExtResource( 4 )
+hover_tint = Color( 0.313726, 1, 0.839216, 1 )
 
 [connection signal="pressed" from="Left/MenuButton" to="." method="_on_MenuButton_pressed"]
 [connection signal="pressed" from="Left/NewFileButton" to="." method="_on_NewFileButton_pressed"]

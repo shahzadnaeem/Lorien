@@ -43,7 +43,8 @@ onready var _brush_rounding_options: OptionButton = $MarginContainer/TabContaine
 onready var _ui_scale_options: OptionButton = $MarginContainer/TabContainer/Appearance/VBoxContainer/UIScale/HBoxContainer/UIScaleOptions
 onready var _ui_scale: SpinBox = $MarginContainer/TabContainer/Appearance/VBoxContainer/UIScale/HBoxContainer/UIScale
 onready var _grid_size: SpinBox = $MarginContainer/TabContainer/Appearance/VBoxContainer/GridSize/GridSize
-onready var _grid_angle: SpinBox = $MarginContainer/TabContainer/Appearance/VBoxContainer/GridAngle/GridAngle
+onready var _grid_angle: HSlider = $MarginContainer/TabContainer/Appearance/VBoxContainer/GridAngle/HBoxContainer/GridAngle
+onready var _grid_angle_value: Label = $MarginContainer/TabContainer/Appearance/VBoxContainer/GridAngle/HBoxContainer/Value
 onready var _grid_pattern: OptionButton = $MarginContainer/TabContainer/Appearance/VBoxContainer/GridPattern/GridPattern
 
 # -------------------------------------------------------------------------------------------------
@@ -52,6 +53,7 @@ func _ready():
 	_apply_language()
 	GlobalSignals.connect("language_changed", self, "_apply_language")
 	
+	# Keep this in sync as it can change elsewhere
 	connect("about_to_show",self,"_set_grid_pattern")
 
 # -------------------------------------------------------------------------------------------------
@@ -62,7 +64,6 @@ func _apply_language() -> void:
 	_tab_container.set_tab_title(3, tr("SETTINGS_KEYBINDINGS"))
 
 # -------------------------------------------------------------------------------------------------
-
 func _set_grid_pattern() -> void:
 	var grid_pattern = Settings.get_value(Settings.APPEARANCE_GRID_PATTERN, Config.DEFAULT_GRID_PATTERN)
 
@@ -71,7 +72,10 @@ func _set_grid_pattern() -> void:
 		Types.GridPattern.LINES: _grid_pattern.selected = GRID_PATTERN_LINES_INDEX
 		Types.GridPattern.NONE: _grid_pattern.selected = GRID_PATTERN_NONE_INDEX
 
+func _set_grid_angle_value(value) -> void:
+	_grid_angle_value.text = "%d" % int(value)
 
+# -------------------------------------------------------------------------------------------------
 func _set_values() -> void:
 	var brush_size = Settings.get_value(Settings.GENERAL_DEFAULT_BRUSH_SIZE, Config.DEFAULT_BRUSH_SIZE)
 	var canvas_color = Settings.get_value(Settings.APPEARANCE_CANVAS_COLOR, Config.DEFAULT_CANVAS_COLOR)
@@ -84,7 +88,6 @@ func _set_values() -> void:
 	var pressure_sensitivity = Settings.get_value(Settings.GENERAL_PRESSURE_SENSITIVITY, Config.DEFAULT_PRESSURE_SENSITIVITY)
 	var ui_scale_mode = Settings.get_value(Settings.APPEARANCE_UI_SCALE_MODE, Config.DEFAULT_UI_SCALE_MODE)
 	var ui_scale = Settings.get_value(Settings.APPEARANCE_UI_SCALE, Config.DEFAULT_UI_SCALE)
-#	var last_grid_pattern = Settings.get_value(Settings.APPEARANCE_LAST_GRID_PATTERN, Config.DEFAULT_GRID_PATTERN)
 	var grid_size = Settings.get_value(Settings.APPEARANCE_GRID_SIZE, Config.DEFAULT_GRID_SIZE)
 	var grid_angle = Settings.get_value(Settings.APPEARANCE_GRID_ANGLE, Config.DEFAULT_GRID_ANGLE)
 	
@@ -112,6 +115,7 @@ func _set_values() -> void:
 	_grid_angle.value = grid_angle
 	
 	_set_grid_pattern()
+	_set_grid_angle_value(_grid_angle.value)
 
 	_project_dir.text = project_dir
 	_foreground_fps.value = foreground_fps
@@ -174,8 +178,14 @@ func _on_GridSize_value_changed(value: int) -> void:
 # -------------------------------------------------------------------------------------------------
 func _on_GridAngle_value_changed(value: float) -> void:
 	Settings.set_value(Settings.APPEARANCE_GRID_ANGLE, value)
+	_set_grid_angle_value(value)
 	emit_signal("grid_angle_changed", value)
 	
+# -------------------------------------------------------------------------------------------------
+func _on_GridAngle_reset() -> void:
+	_grid_angle.value = Config.DEFAULT_GRID_ANGLE
+	_on_GridAngle_value_changed(_grid_angle.value)
+
 # -------------------------------------------------------------------------------------------------
 func _on_GridPattern_item_selected(index: int) -> void:
 	var pattern: int = Types.GridPattern.NONE
